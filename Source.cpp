@@ -1,4 +1,8 @@
-﻿#include <iostream>
+/*
+MIT License
+Copyright (c) 2020 Hiroki Takizawa
+*/
+#include <iostream>
 #include <iomanip>
 #include <chrono>
 #include <string>
