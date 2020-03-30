@@ -217,7 +217,7 @@ void bench_pdep_##name() {\
 		mask = xorshift64(mask);\
 	}\
 	auto end = std::chrono::system_clock::now();\
-	std::cout << "elapesed time = " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()) << " ms" << std::endl;\
+	std::cout << "elapsed time = " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()) << " ms" << std::endl;\
 	std::cout << "result (for validation) = " << std::to_string(result) << std::endl << std::endl;\
 }
 
