@@ -18,10 +18,10 @@ Copyright (c) 2020 Hiroki Takizawa
 #include <immintrin.h>
 
 alignas(64) uint8_t table_16_16[16][16];//x: a側で次に注目する4bitとする。 y:mask側で次に注目する4bitとする。このとき、[x][y]: resultに次に代入すべき4bit。
-alignas(64) uint8_t table_16_16_popcnt[16];//x: mask側で次に注目する4bitとする。このとき、[x]: a側で何ビットが代入されたか
+alignas(64) uint8_t table_16_16_popcount[16];//x: mask側で次に注目する4bitとする。このとき、[x]: a側で何ビットが代入されたか
 
 alignas(64) uint8_t table_256_256[256][256];//x: a側で次に注目する8bitとする。 y:mask側で次に注目する8bitとする。このとき、[x][y]: resultに次に代入すべき8bit。
-alignas(64) uint8_t table_256_256_popcnt[256];//x: mask側で次に注目する8bitとする。このとき、[x]: a側で何ビットが代入されたか
+alignas(64) uint8_t table_256_256_popcount[256];//x: mask側で次に注目する8bitとする。このとき、[x]: a側で何ビットが代入されたか
 
 alignas(64) uint8_t table_16_16_inv[16][16];//x: mask側で次に注目する4bitとする。 y:a側で次に注目する4bitとする。このとき、[x][y]: resultに次に代入すべき4bit。
 alignas(64) uint8_t table_256_256_inv[256][256];//x: mask側で次に注目する8bitとする。 y:a側で次に注目する8bitとする。このとき、[x][y]: resultに次に代入すべき8bit。
@@ -80,11 +80,11 @@ void init_tables() {
 		table_16_16[x][y] = (uint8_t)p;
 	}
 
-	//table_16_16_popcnt
+	//table_16_16_popcount
 	for (uint64_t x = 0; x < 16; ++x) {
 		const uint64_t p = popcount64_naive(x);
 		assert(p <= 4ULL);
-		table_16_16_popcnt[x] = (uint8_t)p;
+		table_16_16_popcount[x] = (uint8_t)p;
 	}
 
 	//table_256_256
@@ -94,11 +94,11 @@ void init_tables() {
 		table_256_256[x][y] = (uint8_t)p;
 	}
 
-	//table_256_256_popcnt
+	//table_256_256_popcount
 	for (uint64_t x = 0; x < 256; ++x) {
 		const uint64_t p = popcount64_naive(x);
 		assert(p <= 8ULL);
-		table_256_256_popcnt[x] = (uint8_t)p;
+		table_256_256_popcount[x] = (uint8_t)p;
 	}
 
 
@@ -124,7 +124,7 @@ void init_tables() {
 
 }
 
-template<int width, bool is_inv, bool use_popcnt_intrinsics>inline uint64_t pdep_table(uint64_t a, uint64_t mask) {
+template<int width, bool is_inv, bool use_popcount_intrinsics>inline uint64_t pdep_table(uint64_t a, uint64_t mask) {
 
 	static_assert(width == 16 || width == 256, "invalid width");
 	constexpr uint64_t log2_width = width == 16 ? 4 : 8;
@@ -135,7 +135,7 @@ template<int width, bool is_inv, bool use_popcnt_intrinsics>inline uint64_t pdep
 		const uint64_t b = mask % width;
 		dst += ((uint64_t)(width == 16 ? (is_inv ? table_16_16_inv[b][a % width] : table_16_16[a % width][b]) : (is_inv ? table_256_256_inv[b][a % width] : table_256_256[a % width][b]))) << m;
 
-		a >>= use_popcnt_intrinsics ? popcount64_intrinsics(b) : width == 16 ? table_16_16_popcnt[b] : table_256_256_popcnt[b];
+		a >>= use_popcount_intrinsics ? popcount64_intrinsics(b) : width == 16 ? table_16_16_popcount[b] : table_256_256_popcount[b];
 	}
 
 	return dst;
@@ -184,10 +184,10 @@ inline uint64_t pdep_pshufb(uint64_t a, uint64_t mask) {
 	for (int i = 0; i < 8; ++i) {
 
 		const __m128i x_lo = _mm_shuffle_epi8(table_16_pshufb[a % 16], mask_lo);
-		a >>= table_16_16_popcnt[mask % 16];
+		a >>= table_16_16_popcount[mask % 16];
 		mask /= 16;
 		const __m128i x_hi = _mm_shuffle_epi8(table_16_pshufb[a % 16], mask_hi);
-		a >>= table_16_16_popcnt[mask % 16];
+		a >>= table_16_16_popcount[mask % 16];
 		mask /= 16;
 
 		//この時点で、x_loとx_hiの『下からi番目のバイトの下位4bit』に、『answerの下からi番目のバイトに入れるべき答え』がある。
