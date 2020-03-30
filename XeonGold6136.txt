@@ -1,48 +1,48 @@
 Bench pdep:pshufb
-elapesed time = 15652 ms
+elapsed time = 15652 ms
 result (for validation) = 13088150873704826118
 
 Bench pdep:intrinsics
-elapesed time = 1452 ms
+elapsed time = 1452 ms
 result (for validation) = 13088150873704826118
 
 Bench pdep:naive
-elapesed time = 323403 ms
+elapsed time = 323403 ms
 result (for validation) = 13088150873704826118
 
 Bench pdep:naive2
-elapesed time = 52795 ms
+elapsed time = 52795 ms
 result (for validation) = 13088150873704826118
 
 Bench pdep:table_16_16
-elapesed time = 17398 ms
+elapsed time = 17398 ms
 result (for validation) = 13088150873704826118
 
 Bench pdep:table_256_256
-elapesed time = 8389 ms
+elapsed time = 8389 ms
 result (for validation) = 13088150873704826118
 
 Bench pdep:table_16_16_inv
-elapesed time = 18575 ms
+elapsed time = 18575 ms
 result (for validation) = 13088150873704826118
 
 Bench pdep:table_256_256_inv
-elapesed time = 8710 ms
+elapsed time = 8710 ms
 result (for validation) = 13088150873704826118
 
 Bench pdep:table_16_16_pop
-elapesed time = 17343 ms
+elapsed time = 17343 ms
 result (for validation) = 13088150873704826118
 
 Bench pdep:table_256_256_pop
-elapesed time = 8387 ms
+elapsed time = 8387 ms
 result (for validation) = 13088150873704826118
 
 Bench pdep:table_16_16_inv_pop
-elapesed time = 18588 ms
+elapsed time = 18588 ms
 result (for validation) = 13088150873704826118
 
 Bench pdep:table_256_256_inv_pop
-elapesed time = 8823 ms
+elapsed time = 8823 ms
 result (for validation) = 13088150873704826118
 
