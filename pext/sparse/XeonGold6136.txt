@@ -1,0 +1,40 @@
+Bench pext:table_16_16, spaeseness = 0
+elapsed time = 17376 ms
+result (for validation) = 20630580670479706
+
+Bench pext:intrinsics, spaeseness = 0
+elapsed time = 1452 ms
+result (for validation) = 20630580670479706
+
+Bench pext:table_16_16, spaeseness = 1
+elapsed time = 19803 ms
+result (for validation) = 47753092104
+
+Bench pext:intrinsics, spaeseness = 1
+elapsed time = 2708 ms
+result (for validation) = 47753092104
+
+Bench pext:table_16_16, spaeseness = 2
+elapsed time = 20487 ms
+result (for validation) = 1384252196
+
+Bench pext:intrinsics, spaeseness = 2
+elapsed time = 3835 ms
+result (for validation) = 1384252196
+
+Bench pext:table_16_16, spaeseness = -1
+elapsed time = 17540 ms
+result (for validation) = 3748923858427541405
+
+Bench pext:intrinsics, spaeseness = -1
+elapsed time = 2595 ms
+result (for validation) = 3748923858427541405
+
+Bench pext:table_16_16, spaeseness = -2
+elapsed time = 18129 ms
+result (for validation) = 13177170353892895643
+
+Bench pext:intrinsics, spaeseness = -2
+elapsed time = 3840 ms
+result (for validation) = 13177170353892895643
+
