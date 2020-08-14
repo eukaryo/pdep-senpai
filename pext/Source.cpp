@@ -205,6 +205,45 @@ inline uint64_t pext_pshufb(uint64_t a, uint64_t mask) {
 	return (uint64_t)_mm_cvtsi128_si64(answer);
 }
 
+inline uint64_t pext_pshufb2(uint64_t a, uint64_t mask) {
+
+	__m128i mask_lo = _mm_set_epi64x(0xFFFF'FFFF'FFFF'FFFFULL, (mask & 0x0F0F'0F0F'0F0F'0F0FULL));
+	__m128i mask_hi = _mm_set_epi64x(0xFFFF'FFFF'FFFF'FFFFULL, (mask & 0xF0F0'F0F0'F0F0'F0F0ULL) >> 4);
+
+	__m128i bytemask = _mm_set_epi64x(0, 0xFF);
+	__m128i answer = _mm_setzero_si128();
+
+	uint64_t mask_pop4 = mask
+		- ((mask >> 1) & 0x7777777777777777ULL)
+		- ((mask >> 2) & 0x3333333333333333ULL)
+		- ((mask >> 3) & 0x1111111111111111ULL);
+
+	uint64_t acc_pop = 0;
+
+	for (int i = 0; i < 8; ++i) {
+
+		const __m128i x_lo = _mm_shuffle_epi8(pext_table_16_pshufb[a % 16], mask_lo);
+		const uint64_t lo_pop = mask_pop4 % 16;
+		a /= 16;
+		mask_pop4 /= 16;
+		const __m128i x_hi = _mm_shuffle_epi8(pext_table_16_pshufb[a % 16], mask_hi);
+		const uint64_t hi_pop = mask_pop4 % 16;
+		a /= 16;
+		mask_pop4 /= 16;
+
+		//この時点で、x_loとx_hiの『下からi番目のバイトの下位4bit』に、『answerの下からi番目のバイトに入れるべき答え』がある。
+		//その答えを詰めて入れる必要があり、詰め幅を決めるにはmaskのpopcountをする必要がある。
+
+		mask_lo = _mm_srli_epi64(mask_lo, 8);
+		mask_hi = _mm_srli_epi64(mask_hi, 8);
+
+		answer = _mm_or_si128(answer, _mm_slli_epi64(_mm_and_si128(bytemask, _mm_or_si128(x_lo, _mm_slli_epi64(x_hi, (int)lo_pop))), (int)acc_pop));
+		acc_pop += lo_pop + hi_pop;
+	}
+
+	return (uint64_t)_mm_cvtsi128_si64(answer);
+}
+
 inline uint64_t xorshift64(uint64_t x) {
 	x = x ^ (x << 7);
 	return x ^ (x >> 9);
@@ -239,12 +278,14 @@ DEF_BENCH_PEXT(table_256_256_pop)
 DEF_BENCH_PEXT(table_16_16_inv_pop)
 DEF_BENCH_PEXT(table_256_256_inv_pop)
 DEF_BENCH_PEXT(pshufb)
+DEF_BENCH_PEXT(pshufb2)
 
 int main() {
 
 	init_tables();
 
 	bench_pext_pshufb();
+	bench_pext_pshufb2();
 	bench_pext_intrinsics();
 	bench_pext_naive();
 	bench_pext_naive2();
