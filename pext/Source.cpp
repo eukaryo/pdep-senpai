@@ -222,11 +222,11 @@ inline uint64_t pext_pshufb2(uint64_t a, uint64_t mask) {
 
 	for (int i = 0; i < 8; ++i) {
 
-		const __m128i x_lo = _mm_shuffle_epi8(pext_table_16_pshufb[a % 16], mask_lo);
+		const __m128i x_lo = _mm_shuffle_epi8(table_16_pshufb[a % 16], mask_lo);
 		const uint64_t lo_pop = mask_pop4 % 16;
 		a /= 16;
 		mask_pop4 /= 16;
-		const __m128i x_hi = _mm_shuffle_epi8(pext_table_16_pshufb[a % 16], mask_hi);
+		const __m128i x_hi = _mm_shuffle_epi8(table_16_pshufb[a % 16], mask_hi);
 		const uint64_t hi_pop = mask_pop4 % 16;
 		a /= 16;
 		mask_pop4 /= 16;
@@ -243,6 +243,7 @@ inline uint64_t pext_pshufb2(uint64_t a, uint64_t mask) {
 
 	return (uint64_t)_mm_cvtsi128_si64(answer);
 }
+
 
 inline uint64_t xorshift64(uint64_t x) {
 	x = x ^ (x << 7);
