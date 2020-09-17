@@ -1,0 +1,16 @@
+Bench select1:naive
+elapsed time = 75074 ms
+result (for validation) = 32797604846
+
+Bench select1:bsf
+elapsed time = 8397 ms
+result (for validation) = 32797604846
+
+Bench select1:popcnt_binarysearch
+elapsed time = 18594 ms
+result (for validation) = 32797604846
+
+Bench select1:pdep
+elapsed time = 1769 ms
+result (for validation) = 32797604846
+
