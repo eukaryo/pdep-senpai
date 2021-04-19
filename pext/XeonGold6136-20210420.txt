@@ -1,0 +1,52 @@
+Bench pext:hd7
+elapsed time = 21743 ms
+result (for validation) = 20630580670479706
+
+Bench pext:pshufb
+elapsed time = 19963 ms
+result (for validation) = 20630580670479706
+
+Bench pext:intrinsics
+elapsed time = 1456 ms
+result (for validation) = 20630580670479706
+
+Bench pext:naive
+elapsed time = 325205 ms
+result (for validation) = 20630580670479706
+
+Bench pext:naive2
+elapsed time = 61133 ms
+result (for validation) = 20630580670479706
+
+Bench pext:table_16_16
+elapsed time = 17417 ms
+result (for validation) = 20630580670479706
+
+Bench pext:table_256_256
+elapsed time = 8263 ms
+result (for validation) = 20630580670479706
+
+Bench pext:table_16_16_inv
+elapsed time = 18605 ms
+result (for validation) = 20630580670479706
+
+Bench pext:table_256_256_inv
+elapsed time = 8729 ms
+result (for validation) = 20630580670479706
+
+Bench pext:table_16_16_pop
+elapsed time = 17348 ms
+result (for validation) = 20630580670479706
+
+Bench pext:table_256_256_pop
+elapsed time = 8419 ms
+result (for validation) = 20630580670479706
+
+Bench pext:table_16_16_inv_pop
+elapsed time = 18520 ms
+result (for validation) = 20630580670479706
+
+Bench pext:table_256_256_inv_pop
+elapsed time = 8669 ms
+result (for validation) = 20630580670479706
+
