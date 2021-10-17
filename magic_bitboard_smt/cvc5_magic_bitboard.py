@@ -35,21 +35,19 @@ def bin64(n):
 def hex64(n):
     return "0x"+hex(n)[2:].zfill(16)
 
-def solve(mask, compromise):
+def solve(mask):
 
     slv = pycvc5.Solver()
 
-    # Optionally, set the logic. We need at least UF for equality predicate,
-    # integers (LIA) and sets (FS).
     slv.setLogic("QF_ALL")
     slv.setOption("produce-models", "true")
     slv.setOption("output-language", "smt2")
 
 
     bitvector64 = slv.mkBitVectorSort(64)
-    bitvector_ext = slv.mkOp(pycvc5.kinds.BVExtract, 63, 63 - popcount(mask) - compromise + 1)
-    bitvector_short = slv.mkBitVectorSort(popcount(mask) + compromise)
-    set_ = slv.mkSetSort(slv.mkBitVectorSort(popcount(mask) + compromise))
+    bitvector_ext = slv.mkOp(pycvc5.kinds.BVExtract, 63, 63 - popcount(mask) + 1)
+    bitvector_short = slv.mkBitVectorSort(popcount(mask))
+    set_ = slv.mkSetSort(slv.mkBitVectorSort(popcount(mask)))
 
     shift32 = slv.mkBitVector(64, 32)
 
@@ -62,7 +60,7 @@ def solve(mask, compromise):
     imul_tmp = [slv.mkTerm(pycvc5.kinds.BVMult, masked_bb[i], magic_number) for i in range(2 ** popcount(mask))]
     result_index_short = [slv.mkTerm(pycvc5.kinds.Singleton, slv.mkTerm(bitvector_ext, imul_tmp[i])) for i in range(2 ** popcount(mask))]
 
-    target = [slv.mkTerm(pycvc5.kinds.Singleton, slv.mkBitVector(popcount(mask) + compromise, i)) for i in range(2 ** popcount(mask))]
+    target = [slv.mkTerm(pycvc5.kinds.Singleton, slv.mkBitVector(popcount(mask), i)) for i in range(2 ** popcount(mask))]
 
     union1 = [slv.mkEmptySet(set_)]
     union2 = [slv.mkEmptySet(set_)]
@@ -72,13 +70,10 @@ def solve(mask, compromise):
 
     magic = slv.mkTerm(pycvc5.kinds.Equal, union1[-1], union2[-1])
 
-    # print("")
     print("solve start")
     # print(f"{str(magic)}")
-    # print("")
 
     result = slv.checkSatAssuming(magic)
-
 
     print(f"cvc5 reports: magic is {result}")
 
@@ -112,7 +107,7 @@ def rookBlockMaskCalc(square):
 
     return result
 
-def find_magic_number_rook(square, compromise):
+def find_magic_number_rook(square):
     bb = rookBlockMaskCalc(square)
     print(f"square = {square}")
     print(f"bb[0] = {bin64(bb[0])}")
@@ -120,15 +115,9 @@ def find_magic_number_rook(square, compromise):
     assert (bb[0] & bb[1]) == 0
     mask = bb[0] | bb[1]
     pop = popcount(mask)
-    print(f"start : {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : square = {square}, mask = {hex64(mask)} (pop = {popcount(mask)}), compromise = {compromise}")
-
-    with open(f"cnf_subgoals_rook_{square}_{compromise}.txt", "w", encoding='utf-8') as f:
-        subgoal = solve(bb[0] | bb[1], compromise)
-        for x in subgoal:
-            s = "".join(str(x).split())
-            f.write(s + "\n")
-
-    print(f"finish: {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : square = {square}, mask = {hex64(mask)} (pop = {popcount(mask)}), compromise = {compromise}")
+    print(f"start : {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : square = {square}, mask = {hex64(mask)} (pop = {popcount(mask)}),")
+    solve(bb[0] | bb[1])
+    print(f"finish: {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : square = {square}, mask = {hex64(mask)} (pop = {popcount(mask)})")
 
 
 if __name__ == "__main__":
@@ -139,5 +128,5 @@ if __name__ == "__main__":
     # solve(testmask, 0)
     # print(f"finish: {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : mask = {hex64(testmask)} (pop = {popcount(testmask)}), compromise = {0}")
 
-    # find_magic_number_rook(17, 0)
-    find_magic_number_rook(53, 0)
+    find_magic_number_rook(17)
+    find_magic_number_rook(53)
