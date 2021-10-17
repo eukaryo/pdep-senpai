@@ -115,7 +115,7 @@ def find_magic_number_rook(square):
     assert (bb[0] & bb[1]) == 0
     mask = bb[0] | bb[1]
     pop = popcount(mask)
-    print(f"start : {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : square = {square}, mask = {hex64(mask)} (pop = {popcount(mask)}),")
+    print(f"start : {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : square = {square}, mask = {hex64(mask)} (pop = {popcount(mask)})")
     solve(bb[0] | bb[1])
     print(f"finish: {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : square = {square}, mask = {hex64(mask)} (pop = {popcount(mask)})")
 
@@ -124,9 +124,9 @@ if __name__ == "__main__":
 
     # testmask = 0b1000001001100100110001
     # testmask = 0b10000010000000001110000000000
-    # print(f"start : {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : mask = {hex64(testmask)} (pop = {popcount(testmask)}), compromise = {0}")
-    # solve(testmask, 0)
-    # print(f"finish: {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : mask = {hex64(testmask)} (pop = {popcount(testmask)}), compromise = {0}")
+    # print(f"start : {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : mask = {hex64(testmask)} (pop = {popcount(testmask)})")
+    # solve(testmask)
+    # print(f"finish: {datetime.datetime.now().strftime(r'%Y/%m/%d %H:%M:%S')} : mask = {hex64(testmask)} (pop = {popcount(testmask)})")
 
     find_magic_number_rook(17)
     find_magic_number_rook(53)
