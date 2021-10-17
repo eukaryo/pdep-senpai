@@ -43,7 +43,7 @@ inline uint64_t popcount64_naive(uint64_t x) {
 		if (x & (1ULL << i))++answer;
 	}
 	return answer;
-};
+}
 
 inline uint64_t pext_naive(uint64_t a, uint64_t mask) {
 	uint64_t dst = 0, k = 0;
